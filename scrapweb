@@ -1,0 +1,32 @@
+
+import json
+import os
+from urllib.request import urlopen as uReq
+from bs4 import BeautifulSoup as soup
+
+pair = 'XBTMYR'
+my_url = 'https://api.mybitx.com/api/1/ticker?pair=' + pair
+
+#opening up connection, grabbing a page
+uClient = uReq(my_url)
+page_html = uClient.read()
+uClient.close()
+
+#json parsing
+j = json.loads(page_html)
+
+#concat tuple to string
+headers = ';'.join(j.keys()) + '\n'
+content = ';'.join(str(x) for x in j.values()) + '\n'
+
+#write to file
+filename = "/Users/jnk/Desktop/est11.csv"
+
+if not os.path.isfile(filename):
+	f = open(filename, "w")
+	f.write(headers)
+else:
+	f = open(filename, "a")
+	
+f.write(content)
+f.close()
